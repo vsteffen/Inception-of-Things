@@ -1,0 +1,17 @@
+apps:
+  - name: one
+    replicas: 1
+    host: "app1.com"
+  - name: two
+    replicas: 3
+    host: "app2.com"
+  - name: three
+    replicas: 1
+
+deployment:
+  container:
+    image:
+      repository: "paulbouwer/hello-kubernetes"
+      tag: "1.10.1"
+      pullPolicy: IfNotPresent
+    port: 8080

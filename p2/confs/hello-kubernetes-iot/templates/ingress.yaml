@@ -1,0 +1,24 @@
+{{- range $app := .Values.apps }}
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: "app-{{ $app.name }}"
+spec:
+  rules:
+  {{- if $app.host }}
+  - host: "{{ $app.host }}"
+  {{- end }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: "app-{{ $app.name }}"
+            port:
+              number: 80
+
+{{- end }}
+

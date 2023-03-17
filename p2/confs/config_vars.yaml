@@ -1,0 +1,9 @@
+config_vars:
+
+    name:
+        server: "vsteffenS"
+        worker: "vsteffenSW"
+
+    ip:
+        server: "192.168.56.110"
+        worker: "192.168.56.111"

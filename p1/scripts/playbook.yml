@@ -1,0 +1,34 @@
+- name: Install server
+  hosts: server
+  tasks:
+
+    - name: Install K3S as controller
+      shell: 'curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--node-ip {{ k3s_ip["server"] }} --bind-address {{ k3s_ip["server"] }} --tls-san $HOSTNAME" sh -'
+
+    - name: Wait until token is generated
+      become: yes
+      wait_for:
+        path: /var/lib/rancher/k3s/server/node-token
+        timeout: 500
+
+# ------------------------------------------------------
+
+- name: Install worker
+  hosts: worker
+  tasks:
+
+  - name: Retrieve K3S token from controller
+    become: yes
+    command: cat /var/lib/rancher/k3s/server/node-token
+    delegate_to: "{{ item }}"
+    with_items: "{{ groups['server'] }}"
+    register: k3s_token
+
+  - name: debug k3s_token
+    debug:
+      var: k3s_token
+
+  - name: Install K3S as agent
+    vars:
+      server_url: "https://{{ k3s_ip['server'] }}:6443"
+    shell: 'curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--node-ip {{ k3s_ip["worker"] }}" K3S_URL={{ server_url }} K3S_TOKEN={{ k3s_token.results[0].stdout }} sh -'

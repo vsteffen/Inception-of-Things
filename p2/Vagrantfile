@@ -1,0 +1,47 @@
+# Retrieve specific value of the subject
+
+require 'yaml'
+
+current_dir = File.dirname(File.expand_path(__FILE__))
+config_vars = YAML.load_file("#{current_dir}/confs/config_vars.yaml")
+k3s_vars    = config_vars["config_vars"]
+
+k3s_name = k3s_vars["name"]
+k3s_ip = k3s_vars["ip"]
+
+
+Vagrant.configure("2") do |config|
+    # Configure box
+    config.vm.box = "generic/alpine312"
+    config.vm.box_version = "4.2.14"
+    config.vm.provider "virtualbox" do |v|
+        v.customize ["modifyvm", :id, "--cpuexecutioncap", "80"]
+        v.memory = 1024
+    end
+
+    # Configure server
+    config.vm.define k3s_name["server"] do |server|
+        server.vm.hostname = k3s_name["server"]
+        server.vm.network "private_network", ip: k3s_ip["server"]
+    end
+
+    # Configure worker
+    config.vm.define k3s_name["worker"] do |worker|
+        worker.vm.hostname = k3s_name["worker"]
+        worker.vm.network "private_network", ip: k3s_ip["worker"]
+    end
+
+    # Ansible used to install server and worker K3S
+    config.vm.provision "shell", privileged: "true", inline: "apk add python3 git"
+    config.vm.provision "ansible" do |ansible|
+        ansible.playbook = "scripts/playbook.yml"
+        ansible.groups = {
+            "server" => [k3s_name["server"]],
+            "worker" => [k3s_name["worker"]]
+        }
+        ansible.extra_vars = {
+            k3s_ip: k3s_ip,
+            k3s_name: k3s_name
+        }
+    end
+end

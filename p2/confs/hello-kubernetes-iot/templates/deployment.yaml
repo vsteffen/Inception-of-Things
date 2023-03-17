@@ -1,0 +1,29 @@
+{{- range $app := .Values.apps }}
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "app-{{ $app.name }}"
+  labels:
+    app: "app-{{ $app.name }}"
+spec:
+  replicas: {{ $app.replicas }}
+  selector:
+    matchLabels:
+      app: "app-{{ $app.name }}"
+  template:
+    metadata:
+      labels:
+        app: "app-{{ $app.name }}"
+    spec:
+      containers:
+      - name: "{{ $.Values.deployment.container.image.repository }}"
+        image: "{{ $.Values.deployment.container.image.repository }}:{{ $.Values.deployment.container.image.tag }}"
+        ports:
+        - containerPort: {{ $.Values.deployment.container.port }}
+        env:
+        - name: MESSAGE
+          value: "Hello from app-{{ $app.name }}."
+
+{{- end }}
