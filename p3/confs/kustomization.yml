@@ -7,6 +7,7 @@ resources:
 
 ## changes to config maps
 patchesStrategicMerge:
+  - argocd-cm.yml
   - argocd-cmd-params-cm.yml
 
 namespace: argocd
