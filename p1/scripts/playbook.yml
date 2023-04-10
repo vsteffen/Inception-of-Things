@@ -24,10 +24,6 @@
     with_items: "{{ groups['server'] }}"
     register: k3s_token
 
-  - name: debug k3s_token
-    debug:
-      var: k3s_token
-
   - name: Install K3S as agent
     vars:
       server_url: "https://{{ k3s_ip['server'] }}:6443"
