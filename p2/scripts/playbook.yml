@@ -12,8 +12,8 @@
     - name: Copy chart files to server
       become: yes
       copy:
-        src: {{ chart_src_path }}
-        dest: /srv/{{ chart_name }}
+        src: "{{ chart_src_path }}"
+        dest: "/srv/{{ chart_name }}"
 
     - name: Install Helm chart
       become: yes
