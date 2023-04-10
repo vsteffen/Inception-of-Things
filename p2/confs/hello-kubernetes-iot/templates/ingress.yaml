@@ -7,10 +7,7 @@ metadata:
   name: "app-{{ $app.name }}"
 spec:
   rules:
-  {{- if $app.host }}
-  - host: "{{ $app.host }}"
-  {{- end }}
-    http:
+  - http:
       paths:
       - path: /
         pathType: Prefix
@@ -19,6 +16,9 @@ spec:
             name: "app-{{ $app.name }}"
             port:
               number: 80
+  {{- if $app.host }}
+    host: "{{ $app.host }}"
+  {{- end }}
 
 {{- end }}
 

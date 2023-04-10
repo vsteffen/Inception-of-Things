@@ -18,7 +18,7 @@ spec:
         app: "app-{{ $app.name }}"
     spec:
       containers:
-      - name: "{{ $.Values.deployment.container.image.repository }}"
+      - name: "{{ $.Values.deployment.container.name }}"
         image: "{{ $.Values.deployment.container.image.repository }}:{{ $.Values.deployment.container.image.tag }}"
         ports:
         - containerPort: {{ $.Values.deployment.container.port }}

@@ -10,6 +10,7 @@ apps:
 
 deployment:
   container:
+    name: hello-kubernetes
     image:
       repository: "paulbouwer/hello-kubernetes"
       tag: "1.10.1"

@@ -9,6 +9,8 @@ k3s_vars    = config_vars["config_vars"]
 k3s_name = k3s_vars["name"]
 k3s_ip = k3s_vars["ip"]
 
+chart_name = "hello-kubernetes-iot"
+chart_src_path = "#{current_dir}/confs/#{chart_name}"
 
 Vagrant.configure("2") do |config|
     # Configure box
@@ -41,7 +43,9 @@ Vagrant.configure("2") do |config|
         }
         ansible.extra_vars = {
             k3s_ip: k3s_ip,
-            k3s_name: k3s_name
+            k3s_name: k3s_name,
+            chart_name: chart_name,
+            chart_src_path: chart_src_path
         }
     end
 end

@@ -9,6 +9,17 @@
       shell:
         cmd: 'curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | PATH=/usr/local/bin:$PATH bash'
 
+    - name: Copy chart files to server
+      become: yes
+      copy:
+        src: {{ chart_src_path }}
+        dest: /srv/{{ chart_name }}
+
+    - name: Install Helm chart
+      become: yes
+      shell:
+        cmd: 'KUBECONFIG=/etc/rancher/k3s/k3s.yaml helm install {{ chart_name }} /srv/{{ chart_name }}'
+
     - name: Wait until token is generated
       become: yes
       wait_for:
