@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Install Docker
 wget -q -O - https://get.docker.com | sh
 
