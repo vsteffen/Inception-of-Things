@@ -3,6 +3,8 @@
   tasks:
 
     - name: Install K3S as controller
+      args:
+        warn: false
       shell: 'curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--node-ip {{ k3s_ip["server"] }} --bind-address {{ k3s_ip["server"] }} --tls-san $HOSTNAME" sh -'
 
     - name: Wait until token is generated
@@ -27,4 +29,6 @@
   - name: Install K3S as agent
     vars:
       server_url: "https://{{ k3s_ip['server'] }}:6443"
+    args:
+      warn: false
     shell: 'curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--node-ip {{ k3s_ip["worker"] }}" K3S_URL={{ server_url }} K3S_TOKEN={{ k3s_token.results[0].stdout }} sh -'

@@ -3,9 +3,13 @@
   tasks:
 
     - name: Install K3S as controller
+      args:
+        warn: false
       shell: 'curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--node-ip {{ k3s_ip["server"] }} --bind-address {{ k3s_ip["server"] }} --tls-san $HOSTNAME" sh -'
 
     - name: Install Helm
+      args:
+        warn: false
       shell:
         cmd: 'curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | PATH=/usr/local/bin:$PATH bash'
 
